@@ -12,7 +12,6 @@ def read_first_column(filename):
 
 def plot_histogram(data, title='Histogram', xlabel='Energy deposited', ylabel='Frequency'):
     plt.hist(data, bins=10)
-
     plt.title(title)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
