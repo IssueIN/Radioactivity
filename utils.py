@@ -39,6 +39,33 @@ def fetch_values_from_folder(directory):
         print(f"An error occurred while processing {filename}: {e}")
   return x, y, raw_y
 
+def fetch_values_nd2(directory):
+  x = [] 
+  y = []
+  y_sum = []
+  dt=[]
+
+  for filename in os.listdir(directory):
+    file_path = os.path.join(directory, filename)
+
+    if os.path.isfile(file_path):
+      try:
+        with open(file_path, 'r') as file:
+          values = [float(line.strip()) for line in file.readlines()]
+                    
+          if values:
+            mean_value = np.mean(values)
+            y.append(mean_value)
+            x.append(float(filename))
+            y_sum.append(np.sum(values))
+            dt.append(len(values))
+
+      except ValueError as ve:
+        print(f"Could not convert the content of {filename} to a float: {ve}")
+      except Exception as e:
+        print(f"An error occurred while processing {filename}: {e}")
+  return x, y, y_sum, dt
+
 def read_files_from_folder(dir):
   data = []
   for filename in os.listdir(dir):
@@ -91,10 +118,10 @@ def nd2(n, d, t=1):
     d = np.array(d)
     return n / t * d**2
 
-def nd2_err(d, n):
+def nd2_err(d, n, dt=1):
     n = np.array(n)
     d = np.array(d)
-    error = np.sqrt(d ** 4 * n  + (2 * n * d)**2 * (0.003) ** 2)
+    error = 1/np.sqrt(dt) * np.sqrt(d ** 4 * n  + (2 * n * d)**2 * (0.003) ** 2)
     return error
 
 def dead_time_correction(n, dt = 1.8e-6):
