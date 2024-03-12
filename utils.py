@@ -124,9 +124,13 @@ def nd2_err(d, n, dt=1):
     error = 1/np.sqrt(dt) * np.sqrt(d ** 4 * n  + (2 * n * d)**2 * (0.003) ** 2)
     return error
 
-def dead_time_correction(n, dt = 1.8e-6):
-  n_ = [n__ / np.exp(-n__*dt) for n__ in n]
-  return n_
+def dead_time_correction(n, dt, deadtime = 5e-6):
+  n = np.array(n)
+  dt = np.array(dt)
+  n_norm = n/dt
+  n_c_norm = n_norm / np.exp(-n_norm*deadtime)
+  n_c = n_c_norm * dt
+  return n_c
 
 def simu_data_processing(data):
   aggregated_data = {}
